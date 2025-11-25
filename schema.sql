@@ -60,7 +60,7 @@ CREATE TABLE Rental_Reservation (
 -- );
 
 
--- Insert Dummies
+-- Insert Dummies (seed data)
 INSERT INTO Users (id, name, age, license_year)
 VALUES
 (1, 'JS JANG', 24, 2025),

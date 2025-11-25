@@ -46,10 +46,10 @@ def ensure_schema_loaded():
             if s:
                 cur.execute(s + ";")
         conn.commit()
-        print("✅ Schema created!")
+        print("Schema created!")
 
 
-def get_all_users():
+def select_all_users():
     conn = get_db_connection()
     if conn is None:
         return []
@@ -64,15 +64,15 @@ def get_all_users():
     finally:
         conn.close()
 
-def get_user_by_username(username):
+def select_user_by_username(username):
     conn = get_db_connection()
     if conn is None:
         return None
     try:
-        cursor = conn.cursor(dictionary=True)
+        cur = conn.cursor(dictionary=True)
         query = "SELECT * FROM Users WHERE name = %s"
-        cursor.execute(query, (username,))
-        user = cursor.fetchone()
+        cur.execute(query, (username,))
+        user = cur.fetchone()
 
         print(user)
         return user
@@ -83,33 +83,32 @@ def get_user_by_username(username):
 
     finally:
         if conn.is_connected():
-            cursor.close()
+            cur.close()
             conn.close()
 
-def add_user(username, age, license_year):
+def insert_user(username, age, license_year):
     conn = get_db_connection()
     if conn is None:
         return False
 
-    cursor = None
     try:
         # 국내 면허 취득 연령: 17세 미만이면 추가 불가
         if age < 17:
             print("User is underage to have a license")
             return False
 
-        cursor = conn.cursor()
+        cur = conn.cursor()
 
         # 중복 체크: name, age, license_year 모두 일치하면 중복으로 처리
-        cursor.execute(
+        cur.execute(
             "SELECT COUNT(*) FROM Users WHERE name=%s AND age=%s AND license_year=%s",
             (username, age, license_year)
         )
-        if cursor.fetchone()[0] > 0:
+        if cur.fetchone()[0] > 0:
             print("User already exists")
             return False
 
-        cursor.execute(
+        cur.execute(
             "INSERT INTO Users (name, age, license_year) VALUES (%s, %s, %s)",
             (username, age, license_year)
         )
@@ -120,9 +119,9 @@ def add_user(username, age, license_year):
         print("Error adding user:", e)
         return False
     finally:
-        if cursor:
+        if cur:
             try:
-                cursor.close()
+                cur.close()
             except:
                 pass
         if conn and conn.is_connected():
@@ -202,20 +201,20 @@ def delete_user_by_username(username):
         conn.close()
 
 if __name__ == "__main__":
-    get_all_users()
+    select_all_users()
 
     # INSERT
-    add_user("Alice", 15, 2018)
+    insert_user("Alice", 15, 2018)
     # SELECT *
-    get_user_by_username("Alice")
+    select_user_by_username("Alice")
 
     # UPDATE
     update_user(1, new_name="Jisu Jang", new_age=25)
     # SELECT again
-    get_user_by_username("Jisu Jang")
+    select_user_by_username("Jisu Jang")
 
     # DELETE
     delete_user_by_username("James")
     # SELECT *
-    get_all_users()
-    get_user_by_username("James")
+    select_all_users()
+    select_user_by_username("James")
