@@ -3,7 +3,7 @@ USE car_sharing;
 
 -- -- Users
 CREATE TABLE Users (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     age INT NOT NULL,
     license_year INT NOT NULL
@@ -11,14 +11,14 @@ CREATE TABLE Users (
 
 -- Vehicles
 CREATE TABLE Vehicles (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     type ENUM('Compact', 'MidSize', 'SUV', 'Truck', 'Electric') NOT NULL,
     registered_at DATE
 );
 
 -- Insurance_Plan
 CREATE TABLE Insurance_Plan (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     type VARCHAR(255),
     daily_fee INT NOT NULL,
     deductible_amount INT NOT NULL DEFAULT 0,
@@ -30,7 +30,7 @@ CREATE TABLE Insurance_Plan (
 
 -- Rental_Reservation
 CREATE TABLE Rental_Reservation (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     uid INT NOT NULL,
     vid INT NOT NULL,
     iid INT NOT NULL,
@@ -45,19 +45,19 @@ CREATE TABLE Rental_Reservation (
         ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
--- Payment
-CREATE TABLE Payment (
-    iid INT NOT NULL,
-    rid INT NOT NULL,
-    fee INT NOT NULL,
+-- -- Payment
+-- CREATE TABLE Payment (
+--     iid INT NOT NULL,
+--     rid INT NOT NULL,
+--     fee INT NOT NULL,
 
-    PRIMARY KEY (iid, rid),
+--     PRIMARY KEY (iid, rid),
 
-    FOREIGN KEY (iid) REFERENCES Insurance_Plan(id)
-        ON UPDATE CASCADE ON DELETE RESTRICT,
-    FOREIGN KEY (rid) REFERENCES Rental_Reservation(id)
-        ON UPDATE CASCADE ON DELETE RESTRICT
-);
+--     FOREIGN KEY (iid) REFERENCES Insurance_Plan(id)
+--         ON UPDATE CASCADE ON DELETE RESTRICT,
+--     FOREIGN KEY (rid) REFERENCES Rental_Reservation(id)
+--         ON UPDATE CASCADE ON DELETE RESTRICT
+-- );
 
 
 -- Insert Dummies

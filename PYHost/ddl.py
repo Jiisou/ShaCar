@@ -14,7 +14,8 @@ try:
     cur = conn.cursor()
     print("Succesfully connected with DB!!")
 
-    with open("./schema.sql", "r", encoding="utf-8") as f:
+    # cwd: ~/PYHost
+    with open("../schema.sql", "r", encoding="utf-8") as f:
         ddl_script = f.read()
 
     # 여러 쿼리가 하나의 문자열에 있을 때 세미콜론 단위로 split 후 개별 실행
@@ -25,9 +26,6 @@ try:
         if s:
             print(f"[Executing] {s[:50]}...")
             cur.execute(s + ";")
-
-    # for result in cur.execute(ddl_script, multi=True):
-    #     pass
 
     conn.commit()
     cur.close()
