@@ -3,6 +3,7 @@ from mysql.connector import Error
 import os
 from dotenv import load_dotenv
 from datetime import datetime
+from utils import get_db_connection,valid_number
 
 """
 Insurance_Plan (
@@ -19,28 +20,6 @@ Insurance_Plan (
 
 load_dotenv()
 
-def get_db_connection():
-    try:
-        return mysql.connector.connect(
-            host="localhost",
-            user=os.environ["DB_USER"],
-            password=os.environ["DB_PW"],
-            database=os.environ["DB_NAME"]
-        )
-    except Error as e:
-        print(f"[Connection Error] {e}")
-        return None
-
-# 숫자형인지 검증하고 타입을 보장함.
-def valid_number(value, field_name):
-    if value is None:
-        return False
-    try:
-        int(value)
-        return True
-    except ValueError:
-        print(f"[Invalid Number] {field_name} must be an integer. Given: {value}")
-        return False
 
 def select_all_insurance_plans():
     conn = get_db_connection()

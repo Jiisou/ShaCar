@@ -3,6 +3,8 @@ from mysql.connector import Error
 import os
 from dotenv import load_dotenv
 import pandas as pd
+from utils import get_db_connection, valid_date
+
 """
 Users (id, name, age, license_year)
 """
@@ -21,32 +23,6 @@ def get_db_connection():
         print(f"[Connection Error] {e}")
         return None
 
-# 스키마가 없으면 schema.sql 적용해 생성하도록
-def ensure_schema_loaded():
-    conn = get_db_connection()
-    if conn is None:
-        return
-    
-    cur = conn.cursor()
-    cur.execute("""
-        SELECT COUNT(*)
-        FROM information_schema.tables
-        WHERE table_schema = %s
-          AND table_name = 'Users'
-    """, (os.getenv("DB_NAME"),))
-    
-    exists = cur.fetchone()[0]
-
-    if exists == 0:
-        print("⚠️ Schema not found. Applying schema.sql...")
-        with open("schema.sql") as f:
-            script = f.read()
-        for stmt in script.split(";"):
-            s = stmt.strip()
-            if s:
-                cur.execute(s + ";")
-        conn.commit()
-        print("Schema created!")
 
 
 def select_all_users():

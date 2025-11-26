@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from datetime import datetime
 import pandas as pd
+from utils import get_db_connection, valid_date
 
 """
 Vehicles (id, type, registered_at)
@@ -14,29 +15,6 @@ Vehicles (id, type, registered_at)
 
 load_dotenv()
 
-def get_db_connection():
-    try:
-        return mysql.connector.connect(
-            host="localhost",
-            user=os.environ["DB_USER"],
-            password=os.environ["DB_PW"],
-            database=os.environ["DB_NAME"]
-        )
-    except Error as e:
-        print(f"[Connection Error] {e}")
-        return None
-    
-def valid_date(date_str):
-    if not isinstance(date_str, str):
-        print(f"[Invalid Type] Date must be a string in 'YYYY-MM-DD' format. Given: {type(date_str).__name__}")
-        return False
-    try:
-        datetime.strptime(date_str, "%Y-%m-%d")
-        return True
-    except ValueError:
-        print(f"[Invalid Date] Use YYYY-MM-DD. \nGiven: {date_str}")
-        return False
-    
 #신규 차량 등록
 def insert_vehicle(vehicle_type, registered_at):
     if registered_at and not valid_date(registered_at):
